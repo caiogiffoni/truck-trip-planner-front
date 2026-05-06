@@ -8,21 +8,21 @@
   --navy-400: #4a6080;
   --navy-300: #6b8ab0;
 
-  --amber-500: #f59e0b;
-  --amber-400: #fbbf24;
-  --amber-300: #fcd34d;
-  --amber-100: rgba(245, 158, 11, 0.12);
-  --amber-border: rgba(245, 158, 11, 0.35);
+  --amber-500: #ff9500;
+  --amber-400: #ffc200;
+  --amber-300: #ffe060;
+  --amber-100: rgba(255, 149, 0, 0.20);
+  --amber-border: rgba(255, 149, 0, 0.55);
 
-  --green-500: #22c55e;
-  --blue-400: #60a5fa;
-  --red-500: #ef4444;
+  --green-500: #00d975;
+  --blue-400: #42b4ff;
+  --red-500: #ff3232;
 
-  --text-primary: #e2e8f0;
-  --text-secondary: #94a3b8;
-  --text-muted: #475569;
+  --text-primary: #eef2ff;
+  --text-secondary: #a8bdd8;
+  --text-muted: #546880;
 
-  --border: rgba(255, 255, 255, 0.07);
+  --border: rgba(255, 255, 255, 0.10);
   --border-focus: var(--amber-border);
 
   --radius: 6px;
@@ -52,7 +52,7 @@ body { min-height: 100svh; }
   justify-content: center;
   padding: 2rem 1rem;
   background:
-    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(245,158,11,0.08) 0%, transparent 60%),
+    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(255,149,0,0.18) 0%, transparent 60%),
     var(--navy-950);
 }
 
@@ -248,6 +248,73 @@ input[type="number"] { -moz-appearance: textfield; }
   margin-top: 4px;
 }
 
+/* ── Toggle row ────────────────────────────────────────────── */
+.toggle-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 10px 12px;
+  background: var(--navy-800);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  cursor: pointer;
+  text-align: left;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.toggle-row--on {
+  border-color: var(--amber-border);
+  background: var(--amber-100);
+}
+
+.toggle-switch {
+  position: relative;
+  flex-shrink: 0;
+  width: 36px;
+  height: 20px;
+  background: var(--navy-600);
+  border-radius: 10px;
+  transition: background 0.2s;
+}
+
+.toggle-switch--on {
+  background: var(--amber-500);
+}
+
+.toggle-thumb {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 14px;
+  height: 14px;
+  background: #fff;
+  border-radius: 50%;
+  transition: transform 0.2s;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.4);
+}
+
+.toggle-switch--on .toggle-thumb {
+  transform: translateX(16px);
+}
+
+.toggle-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.toggle-label {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.toggle-desc {
+  font-size: 0.74rem;
+  color: var(--text-muted);
+}
+
 /* ── Form error ────────────────────────────────────────────── */
 .form-error {
   display: flex;
@@ -368,12 +435,6 @@ input[type="number"] { -moz-appearance: textfield; }
   color: var(--text-primary);
 }
 
-.results-header-meta {
-  display: flex;
-  gap: 0.75rem;
-  margin-left: auto;
-}
-
 .results-stat {
   font-size: 0.78rem;
   color: var(--text-secondary);
@@ -384,20 +445,26 @@ input[type="number"] { -moz-appearance: textfield; }
 }
 
 .reset-btn {
-  padding: 4px 12px;
-  background: transparent;
-  border: 1px solid var(--border);
+  margin-left: auto;
+  padding: 7px 18px;
+  background: var(--amber-400);
+  border: none;
   border-radius: var(--radius);
-  color: var(--text-secondary);
-  font-size: 0.8rem;
+  color: var(--navy-950);
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
   cursor: pointer;
-  transition: border-color 0.15s, color 0.15s;
+  transition: background 0.15s, transform 0.1s;
   white-space: nowrap;
 }
 
 .reset-btn:hover {
-  border-color: var(--amber-border);
-  color: var(--amber-400);
+  background: #fbbf24;
+}
+
+.reset-btn:active {
+  transform: scale(0.97);
 }
 
 /* ── Results body: map + right panel ──────────────────────── */
@@ -542,12 +609,12 @@ input[type="number"] { -moz-appearance: textfield; }
   align-items: center;
   gap: 8px;
   padding: 8px 14px;
-  background: rgba(34, 197, 94, 0.06);
+  background: rgba(0, 217, 117, 0.08);
   border-bottom: 1px solid var(--border);
 }
 
 .driving-status-dot {
-  color: #22c55e;
+  color: #00d975;
   font-size: 0.75rem;
   line-height: 1;
 }
@@ -555,7 +622,7 @@ input[type="number"] { -moz-appearance: textfield; }
 .driving-status-label {
   font-size: 0.75rem;
   font-weight: 600;
-  color: #22c55e;
+  color: #00d975;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   flex: 1;
@@ -734,9 +801,9 @@ input[type="number"] { -moz-appearance: textfield; }
   align-items: center;
   gap: 5px;
   font-size: 0.72rem;
-  color: #22c55e;
-  background: rgba(34, 197, 94, 0.1);
-  border: 1px solid rgba(34, 197, 94, 0.25);
+  color: #00d975;
+  background: rgba(0, 217, 117, 0.12);
+  border: 1px solid rgba(0, 217, 117, 0.35);
   border-radius: 4px;
   padding: 1px 6px;
 }
@@ -745,7 +812,7 @@ input[type="number"] { -moz-appearance: textfield; }
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: #22c55e;
+  background: #00d975;
   flex-shrink: 0;
 }
 
@@ -826,25 +893,25 @@ input[type="number"] { -moz-appearance: textfield; }
 }
 
 .status-chip--driving {
-  border-color: rgba(22, 163, 74, 0.35);
-  background: rgba(22, 163, 74, 0.08);
+  border-color: rgba(0, 217, 117, 0.45);
+  background: rgba(0, 217, 117, 0.12);
 }
-.status-chip--driving .status-chip-dot   { background: #16a34a; }
-.status-chip--driving .status-chip-value { color: #4ade80; }
+.status-chip--driving .status-chip-dot   { background: #00d975; }
+.status-chip--driving .status-chip-value { color: #5dffa8; }
 
 .status-chip--onduty {
-  border-color: rgba(217, 119, 6, 0.35);
-  background: rgba(217, 119, 6, 0.08);
+  border-color: rgba(255, 149, 0, 0.50);
+  background: rgba(255, 149, 0, 0.13);
 }
-.status-chip--onduty .status-chip-dot   { background: #d97706; }
-.status-chip--onduty .status-chip-value { color: #fbbf24; }
+.status-chip--onduty .status-chip-dot   { background: #ff9500; }
+.status-chip--onduty .status-chip-value { color: #ffc200; }
 
 .status-chip--offduty {
-  border-color: rgba(71, 85, 105, 0.5);
-  background: rgba(71, 85, 105, 0.12);
+  border-color: rgba(100, 116, 139, 0.55);
+  background: rgba(100, 116, 139, 0.14);
 }
-.status-chip--offduty .status-chip-dot   { background: #64748b; }
-.status-chip--offduty .status-chip-value { color: #94a3b8; }
+.status-chip--offduty .status-chip-dot   { background: #7a90a8; }
+.status-chip--offduty .status-chip-value { color: #a8bdd8; }
 
 /* 24h mini-timeline */
 .status-timeline {
@@ -897,8 +964,5 @@ input[type="number"] { -moz-appearance: textfield; }
   }
   .results-right-panel {
     flex: 1;
-  }
-  .results-header-meta {
-    display: none;
   }
 }

@@ -5,6 +5,7 @@ export interface TripFormData {
   pickup_location: string
   dropoff_location: string
   current_cycle_used: number
+  has_curfew: boolean
 }
 
 interface TripFormProps {
@@ -19,6 +20,7 @@ export default function TripForm({ onSubmit, loading = false, error }: TripFormP
     pickup_location: '',
     dropoff_location: '',
     current_cycle_used: 0,
+    has_curfew: true,
   })
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -144,6 +146,23 @@ export default function TripForm({ onSubmit, loading = false, error }: TripFormP
               </span>
             </div>
           </div>
+        </div>
+
+        <div className="form-section">
+          <h2 className="section-label">Options</h2>
+          <button
+            type="button"
+            className={`toggle-row${form.has_curfew ? ' toggle-row--on' : ''}`}
+            onClick={() => setForm(prev => ({ ...prev, has_curfew: !prev.has_curfew }))}
+          >
+            <span className={`toggle-switch${form.has_curfew ? ' toggle-switch--on' : ''}`}>
+              <span className="toggle-thumb" />
+            </span>
+            <span className="toggle-text">
+              <span className="toggle-label">Curfew</span>
+              <span className="toggle-desc">No night driving · 11 pm - 5 am</span>
+            </span>
+          </button>
         </div>
 
         {error && (

@@ -8,10 +8,10 @@ interface StopsListProps {
 }
 
 const STATUS_CONFIG: Record<DutyStatus, { label: string; color: string; bg: string; icon: string }> = {
-  driving:       { label: 'Driving',       color: '#22c55e', bg: 'rgba(34,197,94,0.08)',   icon: '▶' },
-  on_duty:       { label: 'On Duty',       color: '#f59e0b', bg: 'rgba(245,158,11,0.08)',  icon: '◈' },
-  off_duty:      { label: 'Off Duty',      color: '#64748b', bg: 'rgba(100,116,139,0.06)', icon: '◐' },
-  sleeper_berth: { label: 'Sleeper Berth', color: '#3b82f6', bg: 'rgba(59,130,246,0.08)',  icon: '◑' },
+  driving:       { label: 'Driving',       color: '#00d975', bg: 'rgba(0,217,117,0.12)',    icon: '▶' },
+  on_duty:       { label: 'On Duty',       color: '#ff9500', bg: 'rgba(255,149,0,0.13)',   icon: '◈' },
+  off_duty:      { label: 'Off Duty',      color: '#7a90a8', bg: 'rgba(100,116,139,0.10)', icon: '◐' },
+  sleeper_berth: { label: 'Sleeper Berth', color: '#42b4ff', bg: 'rgba(66,180,255,0.12)',  icon: '◑' },
 }
 
 type EventItem = {
@@ -72,19 +72,16 @@ export default function StopsList({ route, days }: StopsListProps) {
         </div>
         <div className="stat-divider" />
         <div className="stat">
-          <span className="stat-value mono">{route.legs.length}</span>
-          <span className="stat-label">legs</span>
+          <span className="stat-value mono">
+            {days.reduce((t, day) => t + day.events.reduce((s, e) => s + (e.end - e.start), 0), 0).toFixed(1)}
+          </span>
+          <span className="stat-label">total hours</span>
         </div>
-      </div>
-
-      <div className="driving-status-row">
-        <span className="driving-status-dot">●</span>
-        <span className="driving-status-label">Driving</span>
-        <span className="driving-status-values mono">
-          {displayMiles.toLocaleString(undefined, { maximumFractionDigits: 1 })} mi
-          <span className="driving-status-sep">·</span>
-          {drivingHours.toFixed(1)} hrs
-        </span>
+        <div className="stat-divider" />
+        <div className="stat">
+          <span className="stat-value mono">{days.length}</span>
+          <span className="stat-label">days</span>
+        </div>
       </div>
 
       <div className="stops-timeline">

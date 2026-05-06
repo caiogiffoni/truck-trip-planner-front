@@ -22,13 +22,8 @@ export default function ResultsView({ data, onReset }: ResultsViewProps) {
           </div>
           <span className="results-title">ELD Trip Planner</span>
         </div>
-        <div className="results-header-meta">
-          <span className="mono results-stat">{data.route.total_miles.toLocaleString()} mi</span>
-          <span className="mono results-stat">{data.route.total_drive_time_hrs.toFixed(1)} hrs drive</span>
-          <span className="mono results-stat">{data.days.length} day{data.days.length !== 1 ? 's' : ''}</span>
-        </div>
         <button className="reset-btn" onClick={onReset} type="button">
-          ← New Trip
+          + New Trip
         </button>
       </header>
 
