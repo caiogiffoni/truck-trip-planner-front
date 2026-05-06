@@ -40,7 +40,7 @@ export default function ResultsView({ data, onReset }: ResultsViewProps) {
 
         {/* Right: Logs + Stops (40%) */}
         <div className="results-right-panel">
-          <StopsList stops={data.stops} route={data.route} />
+          <StopsList stops={data.stops} route={data.route} days={data.days} />
           <LogSheetList days={data.days} />
         </div>
       </div>

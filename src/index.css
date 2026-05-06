@@ -517,6 +517,43 @@ input[type="number"] { -moz-appearance: textfield; }
   background: var(--border);
 }
 
+.driving-status-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  background: rgba(34, 197, 94, 0.06);
+  border-bottom: 1px solid var(--border);
+}
+
+.driving-status-dot {
+  color: #22c55e;
+  font-size: 0.75rem;
+  line-height: 1;
+}
+
+.driving-status-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #22c55e;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  flex: 1;
+}
+
+.driving-status-values {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.driving-status-sep {
+  color: var(--text-muted);
+  font-size: 0.7rem;
+}
+
 .stops-timeline {
   padding: 10px 14px;
   display: flex;
@@ -551,6 +588,7 @@ input[type="number"] { -moz-appearance: textfield; }
   margin: 3px 0;
 }
 
+
 .stop-content {
   flex: 1;
   padding-bottom: 10px;
@@ -582,6 +620,41 @@ input[type="number"] { -moz-appearance: textfield; }
 .stop-location {
   font-size: 0.88rem;
   color: var(--text-secondary);
+}
+
+.stop-event-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.stop-event-meta {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.day-divider {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px 4px;
+}
+
+.day-divider::before,
+.day-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+.day-divider-label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  white-space: nowrap;
 }
 
 /* ── Log sheet list ────────────────────────────────────────── */
@@ -656,6 +729,26 @@ input[type="number"] { -moz-appearance: textfield; }
 .log-sheet-miles {
   font-size: 0.75rem;
   color: var(--text-muted);
+}
+
+.log-sheet-driving-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.72rem;
+  color: #22c55e;
+  background: rgba(34, 197, 94, 0.1);
+  border: 1px solid rgba(34, 197, 94, 0.25);
+  border-radius: 4px;
+  padding: 1px 6px;
+}
+
+.log-sheet-driving-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #22c55e;
+  flex-shrink: 0;
 }
 
 .log-sheet-day-badge {

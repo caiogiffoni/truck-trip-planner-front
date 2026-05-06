@@ -1,19 +1,55 @@
-import type { TripStop, TripRoute } from '../types/trip'
+import type { TripStop, TripRoute, DaySchedule, DutyStatus } from '../types/trip'
+import { floatToTime, duration } from '../utils/timeUtils'
 
 interface StopsListProps {
   stops: TripStop[]
   route: TripRoute
+  days: DaySchedule[]
 }
 
-const STOP_CONFIG = {
-  start:   { label: 'Start',   color: '#22c55e', icon: '◉' },
-  pickup:  { label: 'Pickup',  color: '#60a5fa', icon: '▲' },
-  dropoff: { label: 'Dropoff', color: '#ef4444', icon: '◆' },
-  fuel:    { label: 'Fuel',    color: '#f59e0b', icon: '⬟' },
-  rest:    { label: 'Rest',    color: '#94a3b8', icon: '◐' },
+const STATUS_CONFIG: Record<DutyStatus, { label: string; color: string; bg: string; icon: string }> = {
+  driving:       { label: 'Driving',       color: '#22c55e', bg: 'rgba(34,197,94,0.08)',   icon: '▶' },
+  on_duty:       { label: 'On Duty',       color: '#f59e0b', bg: 'rgba(245,158,11,0.08)',  icon: '◈' },
+  off_duty:      { label: 'Off Duty',      color: '#64748b', bg: 'rgba(100,116,139,0.06)', icon: '◐' },
+  sleeper_berth: { label: 'Sleeper Berth', color: '#3b82f6', bg: 'rgba(59,130,246,0.08)',  icon: '◑' },
 }
 
-export default function StopsList({ stops, route }: StopsListProps) {
+type EventItem = {
+  day: number
+  start: number
+  end: number
+  status: DutyStatus
+  remark?: string
+  miles?: number
+}
+
+export default function StopsList({ route, days }: StopsListProps) {
+  const drivingHours = days.reduce((total, day) =>
+    total + day.events
+      .filter(e => e.status === 'driving')
+      .reduce((s, e) => s + (e.end - e.start), 0), 0)
+
+  const drivingMiles = days.reduce((total, day) =>
+    total + day.events
+      .filter(e => e.status === 'driving')
+      .reduce((s, e) => s + (e.miles ?? 0), 0), 0)
+
+  const displayMiles = drivingMiles > 0 ? drivingMiles : route.total_miles
+
+  // Flatten all events across all days, sorted by (day, start)
+  const allEvents: EventItem[] = days
+    .flatMap(day =>
+      day.events.map(e => ({
+        day: day.day,
+        start: e.start,
+        end: e.end,
+        status: e.status,
+        remark: e.remark,
+        miles: e.miles,
+      }))
+    )
+    .sort((a, b) => a.day !== b.day ? a.day - b.day : a.start - b.start)
+
   return (
     <div className="stops-list">
       <div className="panel-title">
@@ -41,23 +77,70 @@ export default function StopsList({ stops, route }: StopsListProps) {
         </div>
       </div>
 
+      <div className="driving-status-row">
+        <span className="driving-status-dot">●</span>
+        <span className="driving-status-label">Driving</span>
+        <span className="driving-status-values mono">
+          {displayMiles.toLocaleString(undefined, { maximumFractionDigits: 1 })} mi
+          <span className="driving-status-sep">·</span>
+          {drivingHours.toFixed(1)} hrs
+        </span>
+      </div>
+
       <div className="stops-timeline">
-        {stops.map((stop, i) => {
-          const cfg = STOP_CONFIG[stop.type]
+        {allEvents.map((ev, i) => {
+          const cfg = STATUS_CONFIG[ev.status]
+          const isLast = i === allEvents.length - 1
+          const prevDay = i > 0 ? allEvents[i - 1].day : null
+          const isDayBreak = prevDay !== null && ev.day !== prevDay
+
           return (
-            <div key={i} className="stop-item">
-              <div className="stop-dot-col">
-                <span className="stop-dot" style={{ color: cfg.color }}>{cfg.icon}</span>
-                {i < stops.length - 1 && <span className="stop-line" />}
-              </div>
-              <div className="stop-content">
-                <div className="stop-top">
-                  <span className="stop-type-badge" style={{ color: cfg.color, borderColor: cfg.color + '40' }}>
-                    {cfg.label}
-                  </span>
-                  <span className="stop-time mono">Day {stop.day} · {stop.time}</span>
+            <div key={`${ev.day}-${ev.start}-${ev.status}-${i}`}>
+              {isDayBreak && (
+                <div className="day-divider">
+                  <span className="day-divider-label">Day {ev.day}</span>
                 </div>
-                <span className="stop-location">{stop.location}</span>
+              )}
+              <div className="stop-item" style={{ background: cfg.bg }}>
+                <div className="stop-dot-col">
+                  <span className="stop-dot" style={{ color: cfg.color }}>{cfg.icon}</span>
+                  {!isLast && (
+                    <span
+                      className="stop-line"
+                      style={{
+                        background: ev.status === 'driving'
+                          ? `repeating-linear-gradient(to bottom, ${cfg.color} 0px, ${cfg.color} 4px, transparent 4px, transparent 8px)`
+                          : undefined,
+                      }}
+                    />
+                  )}
+                </div>
+                <div className="stop-content">
+                  <div className="stop-top">
+                    <span
+                      className="stop-type-badge"
+                      style={{ color: cfg.color, borderColor: cfg.color + '40', background: cfg.bg }}
+                    >
+                      {cfg.label}
+                    </span>
+                    <span className="stop-time mono">
+                      Day {ev.day} · {floatToTime(ev.start)}–{floatToTime(ev.end)}
+                    </span>
+                  </div>
+                  <div className="stop-event-detail">
+                    {ev.remark && (
+                      <span className="stop-location" style={{ color: cfg.color, opacity: 0.9 }}>
+                        {ev.remark}
+                      </span>
+                    )}
+                    <span className="stop-event-meta mono">
+                      {duration(ev.start, ev.end)}
+                      {ev.miles && ev.miles > 0
+                        ? ` · ${ev.miles.toLocaleString(undefined, { maximumFractionDigits: 0 })} mi`
+                        : ''}
+                    </span>
+                  </div>
+                </div>
               </div>
             </div>
           )

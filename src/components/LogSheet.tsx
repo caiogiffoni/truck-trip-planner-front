@@ -60,6 +60,12 @@ export default function LogSheet({ day }: LogSheetProps) {
         <div className="log-sheet-header-info">
           <span className="log-sheet-date mono">{day.date}</span>
           <span className="log-sheet-miles mono">{day.total_miles.toFixed(0)} mi</span>
+          {drivingHrs > 0 && (
+            <span className="log-sheet-driving-badge">
+              <span className="log-sheet-driving-dot" />
+              Driving · <span className="mono">{duration(0, drivingHrs)}</span>
+            </span>
+          )}
         </div>
 
         <button className="download-btn" onClick={handleDownload} type="button">
