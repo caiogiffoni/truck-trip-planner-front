@@ -6,6 +6,7 @@ export interface DutyEvent {
   start: number   // float hours, 0–24
   end: number
   remark?: string
+  miles?: number
 }
 
 export interface DaySchedule {
@@ -26,8 +27,8 @@ export interface RouteLeg {
 
 export interface TripStop {
   type: StopType
-  location: string
-  coords: [number, number]  // [lng, lat]
+  location: string      // remark or display label
+  coords?: [number, number]  // [lng, lat] — optional, not always provided by backend
   day: number
   time: string              // HH:MM
 }
@@ -43,4 +44,6 @@ export interface TripPlanResult {
   route: TripRoute
   stops: TripStop[]
   days: DaySchedule[]
+  total_hours?: number
+  violations?: string[]
 }

@@ -85,10 +85,10 @@ export default function MapView({ data }: MapViewProps) {
           </>
         )}
 
-        {data.stops.map((stop, i) => (
+        {data.stops.filter(s => s.coords).map((stop, i) => (
           <Marker
             key={i}
-            position={[stop.coords[1], stop.coords[0]]}
+            position={[stop.coords![1], stop.coords![0]]}
             icon={makeIcon(STOP_COLORS[stop.type])}
           >
             <Popup>
