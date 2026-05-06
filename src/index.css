@@ -408,7 +408,7 @@ input[type="number"] { -moz-appearance: textfield; }
   flex: 0 0 40%;
   display: flex;
   flex-direction: column;
-  overflow-y: auto;
+  overflow: hidden;
   background: var(--navy-950);
   scrollbar-width: thin;
   scrollbar-color: var(--navy-600) transparent;
@@ -479,7 +479,8 @@ input[type="number"] { -moz-appearance: textfield; }
   display: flex;
   flex-direction: column;
   border-bottom: 1px solid var(--border);
-  flex-shrink: 0;
+  flex: 1;
+  overflow-y: auto;
 }
 
 .route-stats {
