@@ -15,26 +15,25 @@ interface TripFormProps {
 }
 
 export default function TripForm({ onSubmit, loading = false, error }: TripFormProps) {
-  const [form, setForm] = useState<TripFormData>({
+  const [form, setForm] = useState({
     current_location: '',
     pickup_location: '',
     dropoff_location: '',
-    current_cycle_used: 0,
     has_curfew: true,
   })
+  const [cycleRaw, setCycleRaw] = useState('')
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const { name, value, type } = e.target
-    setForm(prev => ({
-      ...prev,
-      [name]: type === 'number' ? parseFloat(value) || 0 : value,
-    }))
+    const { name, value } = e.target
+    setForm(prev => ({ ...prev, [name]: value }))
   }
 
   function handleSubmit(e: FormEvent) {
     e.preventDefault()
-    onSubmit(form)
+    onSubmit({ ...form, current_cycle_used: parseFloat(cycleRaw) })
   }
+
+  const cycleValue = cycleRaw === '' ? 0 : parseFloat(cycleRaw) || 0
 
   return (
     <div className="form-wrapper">
@@ -129,8 +128,8 @@ export default function TripForm({ onSubmit, loading = false, error }: TripFormP
                 max="70"
                 step="0.5"
                 placeholder="0.0"
-                value={form.current_cycle_used || ''}
-                onChange={handleChange}
+                value={cycleRaw}
+                onChange={e => setCycleRaw(e.target.value)}
                 required
                 className="mono"
               />
@@ -139,10 +138,10 @@ export default function TripForm({ onSubmit, loading = false, error }: TripFormP
             <div className="cycle-bar">
               <div
                 className="cycle-bar-fill"
-                style={{ width: `${Math.min((form.current_cycle_used / 70) * 100, 100)}%` }}
+                style={{ width: `${Math.min((cycleValue / 70) * 100, 100)}%` }}
               />
               <span className="cycle-bar-label mono">
-                {form.current_cycle_used.toFixed(1)} / 70.0 hrs
+                {cycleValue.toFixed(1)} / 70.0 hrs
               </span>
             </div>
           </div>

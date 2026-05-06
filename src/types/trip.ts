@@ -30,13 +30,15 @@ export interface TripStop {
   location: string      // remark or display label
   coords?: [number, number]  // [lng, lat] — optional, not always provided by backend
   day: number
-  time: string              // HH:MM
+  time_start: string    // HH:MM
+  time_end: string      // HH:MM or empty string
 }
 
 export interface TripRoute {
   total_miles: number
   total_drive_time_hrs: number
   polyline: [number, number][]  // [lng, lat]
+  waypoints?: [number, number][]  // [lng, lat] – [start, pickup, dropoff]
   legs: RouteLeg[]
 }
 

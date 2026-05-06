@@ -16,7 +16,8 @@ function normalizeResponse(raw: any): TripPlanResult {
     route: {
       total_miles: raw.route.total_miles,
       total_drive_time_hrs: raw.route.total_drive_time_hrs,
-      polyline: raw.route.polyline as [number, number][],
+      polyline: (raw.route.polyline ?? []) as [number, number][],
+      waypoints: raw.route.waypoints as [number, number][] | undefined,
       legs: raw.route.legs.map((leg: { from: string | string[]; to: string | string[]; miles: number; drive_hrs: number }) => ({
         from: normalizeLeg(leg.from),
         to: normalizeLeg(leg.to),
@@ -24,11 +25,12 @@ function normalizeResponse(raw: any): TripPlanResult {
         drive_hrs: leg.drive_hrs,
       })),
     },
-    stops: raw.stops.map((stop: { type: string; location?: string; remark?: string; day: number; time: string; coords?: [number, number] }) => ({
+    stops: raw.stops.map((stop: { type: string; location?: string; remark?: string; day: number; time?: string; time_start?: string; time_end?: string; coords?: [number, number] }) => ({
       type: stop.type as TripStop['type'],
       location: stop.location ?? stop.remark ?? '',
       day: stop.day,
-      time: stop.time,
+      time_start: stop.time_start ?? stop.time ?? '',
+      time_end: stop.time_end ?? '',
       coords: stop.coords,
     })),
     days: raw.days.map((day: { day: number; date?: string; date_offset_days?: number; total_miles: number; vehicle_number?: string; carrier?: string; events: { status: string; start: number; end: number; remark?: string; miles?: number }[] }) => {

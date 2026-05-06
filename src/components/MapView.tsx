@@ -13,26 +13,51 @@ L.Icon.Default.mergeOptions({
 })
 
 const STOP_COLORS: Record<TripStop['type'], string> = {
-  start:   '#22c55e',
-  pickup:  '#60a5fa',
-  dropoff: '#ef4444',
-  fuel:    '#f59e0b',
+  start:   '#00d975',
+  pickup:  '#42b4ff',
+  dropoff: '#ff3232',
+  fuel:    '#ff9500',
   rest:    '#94a3b8',
 }
 
-function makeIcon(color: string) {
+const WAYPOINT_LABELS: Record<string, string> = {
+  start:   'Start',
+  pickup:  'Pickup',
+  dropoff: 'Dropoff',
+}
+
+function makeIcon(color: string, size = 14) {
   return L.divIcon({
     className: '',
     html: `<div style="
-      width:14px;height:14px;
+      width:${size}px;height:${size}px;
       border-radius:50%;
       background:${color};
       border:2.5px solid #fff;
-      box-shadow:0 1px 4px rgba(0,0,0,0.4);
+      box-shadow:0 1px 4px rgba(0,0,0,0.5);
     "></div>`,
-    iconSize: [14, 14],
-    iconAnchor: [7, 7],
-    popupAnchor: [0, -10],
+    iconSize: [size, size],
+    iconAnchor: [size / 2, size / 2],
+    popupAnchor: [0, -size / 2 - 4],
+  })
+}
+
+function makeWaypointIcon(color: string, letter: string) {
+  return L.divIcon({
+    className: '',
+    html: `<div style="
+      width:28px;height:28px;
+      border-radius:50%;
+      background:${color};
+      border:3px solid #fff;
+      box-shadow:0 2px 8px rgba(0,0,0,0.55);
+      display:flex;align-items:center;justify-content:center;
+      font-size:12px;font-weight:800;color:#fff;font-family:sans-serif;
+      line-height:1;
+    ">${letter}</div>`,
+    iconSize: [28, 28],
+    iconAnchor: [14, 14],
+    popupAnchor: [0, -18],
   })
 }
 
@@ -50,11 +75,27 @@ interface MapViewProps {
   data: TripPlanResult
 }
 
+const WAYPOINT_TYPES = ['start', 'pickup', 'dropoff'] as const
+const WAYPOINT_LETTERS = ['S', 'P', 'D']
+
 export default function MapView({ data }: MapViewProps) {
   // polyline is [lng, lat] → Leaflet wants [lat, lng]
   const polylinePositions: [number, number][] = data.route.polyline.map(
     ([lng, lat]) => [lat, lng]
   )
+
+  // waypoints [lng, lat] → [lat, lng] for Leaflet
+  const waypoints = data.route.waypoints ?? []
+  const waypointLatLngs: [number, number][] = waypoints.map(([lng, lat]) => [lat, lng])
+
+  // FitBounds: prefer polyline, fall back to waypoints
+  const boundsPositions = polylinePositions.length > 1 ? polylinePositions : waypointLatLngs
+
+  // Stops to render as small dots: fuel + rest only
+  const dotStops = data.stops.filter(s => s.coords && !WAYPOINT_TYPES.includes(s.type as typeof WAYPOINT_TYPES[number]))
+
+  // Waypoint metadata: find matching stop for label/time
+  const waypointMeta = WAYPOINT_TYPES.map(type => data.stops.find(s => s.type === type))
 
   return (
     <div className="map-container">
@@ -69,25 +110,48 @@ export default function MapView({ data }: MapViewProps) {
           attribution='© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
         />
 
+        {boundsPositions.length > 1 && <FitBounds positions={boundsPositions} />}
+
         {polylinePositions.length > 1 && (
           <>
-            <FitBounds positions={polylinePositions} />
-            {/* Shadow */}
             <Polyline
               positions={polylinePositions}
               pathOptions={{ color: '#000', weight: 6, opacity: 0.15 }}
             />
-            {/* Route line */}
             <Polyline
               positions={polylinePositions}
-              pathOptions={{ color: '#f59e0b', weight: 3, opacity: 0.9 }}
+              pathOptions={{ color: '#ff9500', weight: 3, opacity: 0.9 }}
             />
           </>
         )}
 
-        {data.stops.filter(s => s.coords).map((stop, i) => (
+        {/* Waypoint markers: Start (S), Pickup (P), Dropoff (D) */}
+        {waypointLatLngs.map((pos, i) => {
+          const type = WAYPOINT_TYPES[i]
+          const meta = waypointMeta[i]
+          return (
+            <Marker
+              key={`wp-${i}`}
+              position={pos}
+              icon={makeWaypointIcon(STOP_COLORS[type], WAYPOINT_LETTERS[i])}
+            >
+              <Popup>
+                <strong>{WAYPOINT_LABELS[type]}</strong><br />
+                {meta?.location}<br />
+                {meta && (
+                  <span style={{ fontFamily: 'monospace', fontSize: '12px' }}>
+                    Day {meta.day} · {meta.time_start}{meta.time_end ? `–${meta.time_end}` : ''}
+                  </span>
+                )}
+              </Popup>
+            </Marker>
+          )
+        })}
+
+        {/* Fuel + rest stop dots */}
+        {dotStops.map((stop, i) => (
           <Marker
-            key={i}
+            key={`stop-${i}`}
             position={[stop.coords![1], stop.coords![0]]}
             icon={makeIcon(STOP_COLORS[stop.type])}
           >
@@ -95,7 +159,7 @@ export default function MapView({ data }: MapViewProps) {
               <strong style={{ textTransform: 'capitalize' }}>{stop.type}</strong><br />
               {stop.location}<br />
               <span style={{ fontFamily: 'monospace', fontSize: '12px' }}>
-                Day {stop.day} · {stop.time}
+                Day {stop.day} · {stop.time_start}{stop.time_end ? `–${stop.time_end}` : ''}
               </span>
             </Popup>
           </Marker>
