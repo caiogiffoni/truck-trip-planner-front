@@ -101,45 +101,24 @@ export default function StopsList({ route, days }: StopsListProps) {
                   <span className="day-divider-label">Day {ev.day}</span>
                 </div>
               )}
-              <div className="stop-item" style={{ background: cfg.bg }}>
-                <div className="stop-dot-col">
-                  <span className="stop-dot" style={{ color: cfg.color }}>{cfg.icon}</span>
-                  {!isLast && (
-                    <span
-                      className="stop-line"
-                      style={{
-                        background: ev.status === 'driving'
-                          ? `repeating-linear-gradient(to bottom, ${cfg.color} 0px, ${cfg.color} 4px, transparent 4px, transparent 8px)`
-                          : undefined,
-                      }}
-                    />
-                  )}
+              <div className="event-card" style={{ borderLeftColor: cfg.color, background: cfg.bg }}>
+                <div className="event-card-top">
+                  <span className="event-card-icon" style={{ color: cfg.color }}>{cfg.icon}</span>
+                  <span className="event-card-badge" style={{ color: cfg.color, borderColor: cfg.color + '50' }}>
+                    {cfg.label}
+                  </span>
+                  <span className="event-card-time mono">
+                    Day {ev.day} · {floatToTime(ev.start)}–{floatToTime(ev.end)}
+                  </span>
                 </div>
-                <div className="stop-content">
-                  <div className="stop-top">
-                    <span
-                      className="stop-type-badge"
-                      style={{ color: cfg.color, borderColor: cfg.color + '40', background: cfg.bg }}
-                    >
-                      {cfg.label}
-                    </span>
-                    <span className="stop-time mono">
-                      Day {ev.day} · {floatToTime(ev.start)}–{floatToTime(ev.end)}
-                    </span>
-                  </div>
-                  <div className="stop-event-detail">
-                    {ev.remark && (
-                      <span className="stop-location" style={{ color: cfg.color, opacity: 0.9 }}>
-                        {ev.remark}
-                      </span>
-                    )}
-                    <span className="stop-event-meta mono">
-                      {duration(ev.start, ev.end)}
-                      {ev.miles && ev.miles > 0
-                        ? ` · ${ev.miles.toLocaleString(undefined, { maximumFractionDigits: 0 })} mi`
-                        : ''}
-                    </span>
-                  </div>
+                {ev.remark && (
+                  <div className="event-card-remark">{ev.remark}</div>
+                )}
+                <div className="event-card-meta mono">
+                  {duration(ev.start, ev.end)}
+                  {ev.miles && ev.miles > 0
+                    ? ` · ${ev.miles.toLocaleString(undefined, { maximumFractionDigits: 0 })} mi`
+                    : ''}
                 </div>
               </div>
             </div>

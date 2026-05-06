@@ -556,82 +556,60 @@ input[type="number"] { -moz-appearance: textfield; }
 }
 
 .stops-timeline {
-  padding: 10px 14px;
+  padding: 10px 12px;
   display: flex;
   flex-direction: column;
-  gap: 0;
+  gap: 6px;
 }
 
-.stop-item {
-  display: flex;
-  gap: 10px;
-  min-height: 40px;
-}
-
-.stop-dot-col {
+.event-card {
+  border-left: 3px solid;
+  border-radius: 6px;
+  padding: 8px 10px;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  width: 16px;
-  flex-shrink: 0;
-  padding-top: 2px;
+  gap: 4px;
 }
 
-.stop-dot {
-  font-size: 14px;
-  line-height: 1;
-}
-
-.stop-line {
-  flex: 1;
-  width: 1px;
-  background: var(--navy-600);
-  margin: 3px 0;
-}
-
-
-.stop-content {
-  flex: 1;
-  padding-bottom: 10px;
-}
-
-.stop-top {
+.event-card-top {
   display: flex;
   align-items: center;
   gap: 6px;
-  margin-bottom: 2px;
 }
 
-.stop-type-badge {
-  font-size: 0.72rem;
-  font-weight: 600;
+.event-card-icon {
+  font-size: 0.8rem;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.event-card-badge {
+  font-size: 0.68rem;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.07em;
   border: 1px solid;
   border-radius: 3px;
-  padding: 1px 6px;
+  padding: 1px 5px;
+  flex-shrink: 0;
 }
 
-.stop-time {
-  font-size: 0.78rem;
+.event-card-time {
+  font-size: 0.72rem;
   color: var(--text-muted);
   margin-left: auto;
 }
 
-.stop-location {
-  font-size: 0.88rem;
-  color: var(--text-secondary);
+.event-card-remark {
+  font-size: 0.84rem;
+  color: var(--text-primary);
+  padding-left: 2px;
 }
 
-.stop-event-detail {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.stop-event-meta {
-  font-size: 0.75rem;
+.event-card-meta {
+  font-size: 0.72rem;
   color: var(--text-muted);
+  padding-left: 2px;
 }
 
 .day-divider {
