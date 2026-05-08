@@ -28,6 +28,7 @@ function normalizeResponse(raw: any): TripPlanResult {
     stops: raw.stops.map((stop: { type: string; location?: string; remark?: string; day: number; time?: string; time_start?: string; time_end?: string; coords?: [number, number] }) => ({
       type: stop.type as TripStop['type'],
       location: stop.location ?? stop.remark ?? '',
+      remark: stop.remark,
       day: stop.day,
       time_start: stop.time_start ?? stop.time ?? '',
       time_end: stop.time_end ?? '',

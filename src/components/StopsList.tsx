@@ -8,10 +8,10 @@ interface StopsListProps {
 }
 
 const STATUS_CONFIG: Record<DutyStatus, { label: string; color: string; bg: string; icon: string }> = {
-  driving:       { label: 'Driving',       color: '#00d975', bg: 'rgba(0,217,117,0.12)',    icon: '▶' },
-  on_duty:       { label: 'On Duty',       color: '#ff9500', bg: 'rgba(255,149,0,0.13)',   icon: '◈' },
-  off_duty:      { label: 'Off Duty',      color: '#7a90a8', bg: 'rgba(100,116,139,0.10)', icon: '◐' },
-  sleeper_berth: { label: 'Sleeper Berth', color: '#42b4ff', bg: 'rgba(66,180,255,0.12)',  icon: '◑' },
+  driving:       { label: 'Driving',       color: '#00d975', bg: 'rgba(0,217,117,0.22)',   icon: '▶' },
+  on_duty:       { label: 'On Duty',       color: '#ffaa22', bg: 'rgba(255,149,0,0.25)',   icon: '◈' },
+  off_duty:      { label: 'Off Duty',      color: '#a8bdd8', bg: 'rgba(100,116,139,0.22)', icon: '◐' },
+  sleeper_berth: { label: 'Sleeper Berth', color: '#42b4ff', bg: 'rgba(66,180,255,0.22)',  icon: '◑' },
 }
 
 type EventItem = {
@@ -23,18 +23,23 @@ type EventItem = {
   miles?: number
 }
 
-export default function StopsList({ route, days }: StopsListProps) {
-  const drivingHours = days.reduce((total, day) =>
-    total + day.events
-      .filter(e => e.status === 'driving')
-      .reduce((s, e) => s + (e.end - e.start), 0), 0)
+function timeToFloat(t: string): number {
+  const [h, m] = t.split(':').map(Number)
+  return h + m / 60
+}
 
-  const drivingMiles = days.reduce((total, day) =>
-    total + day.events
-      .filter(e => e.status === 'driving')
-      .reduce((s, e) => s + (e.miles ?? 0), 0), 0)
+export default function StopsList({ stops, route, days }: StopsListProps) {
+  const stopsWithLocation = stops.filter(s => s.location)
 
-  const displayMiles = drivingMiles > 0 ? drivingMiles : route.total_miles
+  function findStopLocations(day: number, start: number, end: number): string[] {
+    return stopsWithLocation
+      .filter(s => {
+        if (s.day !== day) return false
+        const t = timeToFloat(s.time_start)
+        return t >= start - 0.01 && t <= end + 0.01
+      })
+      .map(s => s.location)
+  }
 
   // Flatten all events across all days, sorted by (day, start)
   const allEvents: EventItem[] = days
@@ -87,9 +92,9 @@ export default function StopsList({ route, days }: StopsListProps) {
       <div className="stops-timeline">
         {allEvents.map((ev, i) => {
           const cfg = STATUS_CONFIG[ev.status]
-          const isLast = i === allEvents.length - 1
           const prevDay = i > 0 ? allEvents[i - 1].day : null
-          const isDayBreak = prevDay !== null && ev.day !== prevDay
+          const isDayBreak = i === 0 || (prevDay !== null && ev.day !== prevDay)
+          const locations = findStopLocations(ev.day, ev.start, ev.end)
 
           return (
             <div key={`${ev.day}-${ev.start}-${ev.status}-${i}`}>
@@ -111,6 +116,9 @@ export default function StopsList({ route, days }: StopsListProps) {
                 {ev.remark && (
                   <div className="event-card-remark">{ev.remark}</div>
                 )}
+                {locations.map((loc, li) => (
+                  <div key={li} className="event-card-location">⊙ {loc}</div>
+                ))}
                 <div className="event-card-meta mono">
                   {duration(ev.start, ev.end)}
                   {ev.miles && ev.miles > 0

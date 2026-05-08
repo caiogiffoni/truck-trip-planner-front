@@ -138,6 +138,9 @@ export default function MapView({ data }: MapViewProps) {
               <Popup>
                 <strong>{WAYPOINT_LABELS[type]}</strong><br />
                 {meta?.location}<br />
+                {meta?.remark && (
+                  <span style={{ display: 'block', fontSize: '12px', margin: '2px 0' }}>{meta.remark}</span>
+                )}
                 {meta && (
                   <span style={{ fontFamily: 'monospace', fontSize: '12px' }}>
                     Day {meta.day} · {meta.time_start}{meta.time_end ? `–${meta.time_end}` : ''}
@@ -158,6 +161,9 @@ export default function MapView({ data }: MapViewProps) {
             <Popup>
               <strong style={{ textTransform: 'capitalize' }}>{stop.type}</strong><br />
               {stop.location}<br />
+              {stop.remark && (
+                <span style={{ display: 'block', fontSize: '12px', margin: '2px 0' }}>{stop.remark}</span>
+              )}
               <span style={{ fontFamily: 'monospace', fontSize: '12px' }}>
                 Day {stop.day} · {stop.time_start}{stop.time_end ? `–${stop.time_end}` : ''}
               </span>

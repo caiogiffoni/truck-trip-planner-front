@@ -27,7 +27,8 @@ export interface RouteLeg {
 
 export interface TripStop {
   type: StopType
-  location: string      // remark or display label
+  location: string      // human-readable city name
+  remark?: string       // full description from backend
   coords?: [number, number]  // [lng, lat] — optional, not always provided by backend
   day: number
   time_start: string    // HH:MM

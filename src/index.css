@@ -334,6 +334,20 @@ input[type="number"] { -moz-appearance: textfield; }
   margin-top: 1px;
 }
 
+.form-error-hint {
+  display: block;
+  font-weight: 600;
+}
+
+.form-error-detail {
+  display: block;
+  margin-top: 3px;
+  font-size: 0.75rem;
+  color: #fca5a5;
+  opacity: 0.8;
+  word-break: break-all;
+}
+
 /* ── Submit button ─────────────────────────────────────────── */
 .submit-btn {
   display: flex;
@@ -682,7 +696,7 @@ input[type="number"] { -moz-appearance: textfield; }
 
 .event-card-time {
   font-size: 0.72rem;
-  color: var(--text-muted);
+  color: var(--text-secondary);
   margin-left: auto;
 }
 
@@ -692,9 +706,15 @@ input[type="number"] { -moz-appearance: textfield; }
   padding-left: 2px;
 }
 
+.event-card-location {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  padding-left: 2px;
+}
+
 .event-card-meta {
   font-size: 0.72rem;
-  color: var(--text-muted);
+  color: var(--text-secondary);
   padding-left: 2px;
 }
 
@@ -710,7 +730,7 @@ input[type="number"] { -moz-appearance: textfield; }
   content: '';
   flex: 1;
   height: 1px;
-  background: var(--border);
+  background: rgba(255, 255, 255, 0.18);
 }
 
 .day-divider-label {
@@ -718,7 +738,7 @@ input[type="number"] { -moz-appearance: textfield; }
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--text-muted);
+  color: var(--text-secondary);
   white-space: nowrap;
 }
 
