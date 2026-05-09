@@ -18,6 +18,7 @@ const STOP_COLORS: Record<TripStop['type'], string> = {
   dropoff: '#ff3232',
   fuel:    '#ff9500',
   rest:    '#94a3b8',
+  break:   '#a78bfa',
 }
 
 const WAYPOINT_LABELS: Record<string, string> = {

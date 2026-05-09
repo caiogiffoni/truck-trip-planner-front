@@ -1,5 +1,5 @@
 export type DutyStatus = 'off_duty' | 'sleeper_berth' | 'driving' | 'on_duty'
-export type StopType = 'start' | 'pickup' | 'dropoff' | 'fuel' | 'rest'
+export type StopType = 'start' | 'pickup' | 'dropoff' | 'fuel' | 'rest' | 'break'
 
 export interface DutyEvent {
   status: DutyStatus

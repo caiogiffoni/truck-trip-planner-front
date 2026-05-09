@@ -100,7 +100,6 @@ function drawData(
   // Convert hour float to x pixel
   const toX = (hour: number) => GRID_X + (hour / 24) * GRID_W
 
-  console.log('Drawing day events:', JSON.stringify(day.events, null, 2))
 
   ctx.strokeStyle = '#000000'
   ctx.lineWidth   = 3
