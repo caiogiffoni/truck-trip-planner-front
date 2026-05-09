@@ -5,6 +5,8 @@ export interface LogSheetMeta {
   carrierName?: string
   vehicleNumber?: string
   tripStartDate?: string
+  fromLocation?: string
+  toLocation?: string
 }
 
 export function drawLogSheet(
@@ -65,6 +67,19 @@ function drawData(
     ctx.font      = '15px Arial'
     ctx.textAlign = 'center'
   }
+
+  // From / To fields — underlines at y≈52, From: x=42-235, To: x=258-490
+  ctx.font      = '8px Arial'
+  ctx.fillStyle = '#000000'
+  ctx.textAlign = 'left'
+  if (meta?.fromLocation) {
+    ctx.fillText(meta.fromLocation, 45, 49)
+  }
+  if (meta?.toLocation) {
+    ctx.fillText(meta.toLocation, 262, 49)
+  }
+  ctx.font      = '7px Arial'
+  ctx.textAlign = 'center'
 
   // ── Section B: 24-hour graph grid ───────────────────────────────────
 

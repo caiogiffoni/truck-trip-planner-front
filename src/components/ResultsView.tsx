@@ -36,7 +36,13 @@ export default function ResultsView({ data, onReset }: ResultsViewProps) {
         {/* Right: Logs + Stops (40%) */}
         <div className="results-right-panel">
           <StopsList stops={data.stops} route={data.route} days={data.days} />
-          <LogSheetList days={data.days} />
+          <LogSheetList
+            days={data.days}
+            meta={{
+              fromLocation: data.route.legs[0]?.from,
+              toLocation:   data.route.legs[data.route.legs.length - 1]?.to,
+            }}
+          />
         </div>
       </div>
     </div>
