@@ -86,8 +86,8 @@ function drawData(
 
   // ── Section B: 24-hour graph grid ───────────────────────────────────
 
-  const GRID_X = 56
-  const GRID_W = 436
+  const GRID_X = 65
+  const GRID_W = 390
   const ROW_H  = 15
 
   const ROW_Y: Record<string, number> = {
@@ -155,7 +155,7 @@ function drawData(
 
   let lineY = 285
   for (const event of remarks.slice(0, 7)) {
-    ctx.fillText(`${toHHMM(event.start)} — ${event.remark}`, 60, lineY)
+    ctx.fillText(`${toHHMM(event.start)} — ${event.remark}`, 80, lineY)
     lineY += 10
   }
 
