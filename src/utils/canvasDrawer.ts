@@ -52,7 +52,7 @@ function drawData(
   ctx.font = '11px Arial'
   const milesStr = String(Math.round(day.total_miles ?? 0))
   ctx.fillText(milesStr, 94, 84)   // left box
-  ctx.fillText(milesStr, 184, 84)  // right box
+  ctx.fillText(milesStr, 175, 84)  // right box
   ctx.font = '7px Arial'
 
   // Carrier name — underline at x=260-465, y=99
@@ -97,39 +97,41 @@ function drawData(
     on_duty:       236,
   }
 
-  const STATUS_COLORS: Record<string, string> = {
-    off_duty:      'rgba(107, 114, 128, 0.6)',
-    sleeper_berth: 'rgba(59,  130, 246, 0.6)',
-    driving:       'rgba(34,  197,  94, 0.7)',
-    on_duty:       'rgba(245, 158,  11, 0.7)',
-  }
-
   // Convert hour float to x pixel
   const toX = (hour: number) => GRID_X + (hour / 24) * GRID_W
 
   console.log('Drawing day events:', JSON.stringify(day.events, null, 2))
 
+  ctx.strokeStyle = '#000000'
+  ctx.lineWidth   = 3
+  ctx.lineJoin    = 'round'
+
+  let prevCenterY: number | null = null
+
   for (const event of day.events) {
-    // Normalize status key — lowercase, replace spaces with underscores
     const status = event.status?.toLowerCase().replace(/\s+/g, '_').trim()
-    const color  = STATUS_COLORS[status]
-    if (!color) continue
+    const y = ROW_Y[status]
+    if (y === undefined) continue
 
     const x1 = toX(event.start)
     const x2 = toX(event.end)
-    const y  = ROW_Y[status]
-    if (y === undefined) continue
+    const centerY = y + ROW_H / 2
 
-    ctx.fillStyle = color
-    ctx.fillRect(x1, y, x2 - x1, ROW_H)
-
-    // Vertical line at each status change
-    ctx.strokeStyle = 'rgba(0, 0, 0, 0.4)'
-    ctx.lineWidth   = 0.5
     ctx.beginPath()
-    ctx.moveTo(x1, ROW_Y.off_duty)
-    ctx.lineTo(x1, ROW_Y.on_duty + ROW_H)
+
+    if (prevCenterY !== null && prevCenterY !== centerY) {
+      // Drop/rise vertically from previous row center to this row center
+      ctx.moveTo(x1, prevCenterY)
+      ctx.lineTo(x1, centerY)
+    } else {
+      ctx.moveTo(x1, centerY)
+    }
+
+    // Horizontal line through this row
+    ctx.lineTo(x2, centerY)
     ctx.stroke()
+
+    prevCenterY = centerY
   }
 
   // ── Section C: remarks ───────────────────────────────────────────────
