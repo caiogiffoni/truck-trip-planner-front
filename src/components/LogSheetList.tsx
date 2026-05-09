@@ -1,12 +1,14 @@
 import { useState } from 'react'
 import type { DaySchedule } from '../types/trip'
 import LogSheet from './LogSheet'
+import type { LogSheetMeta } from '../utils/canvasDrawer'
 
 interface LogSheetListProps {
   days: DaySchedule[]
+  meta?: LogSheetMeta
 }
 
-export default function LogSheetList({ days }: LogSheetListProps) {
+export default function LogSheetList({ days, meta }: LogSheetListProps) {
   const [isOpen, setIsOpen] = useState(false)
 
   return (
@@ -29,7 +31,7 @@ export default function LogSheetList({ days }: LogSheetListProps) {
       {isOpen && (
         <div className="log-sheet-scroll">
           {days.map(day => (
-            <LogSheet key={day.day} day={day} />
+            <LogSheet key={day.day} day={day} meta={meta} />
           ))}
         </div>
       )}
