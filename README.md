@@ -64,6 +64,8 @@ src/
     StopsList.tsx       # Trip summary panel: stats + full event timeline
     LogSheetList.tsx    # Collapsible container for all daily log sheets
     LogSheet.tsx        # Single ELD canvas card with download button
+  hooks/
+    useTripPlan.ts      # API call + loading/error state management
   utils/
     canvasDrawer.ts     # All canvas drawing logic (pure, no React)
     timeUtils.ts        # Float-hour ↔ HH:MM string helpers
