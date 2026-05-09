@@ -508,7 +508,7 @@ input[type="number"] { -moz-appearance: textfield; }
   flex: 0 0 40%;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+  overflow-y: auto;
   background: var(--navy-950);
   scrollbar-width: thin;
   scrollbar-color: var(--navy-600) transparent;
@@ -871,6 +871,30 @@ input[type="number"] { -moz-appearance: textfield; }
   background: var(--amber-100);
   border-color: var(--amber-border);
   color: var(--amber-400);
+}
+
+.download-log-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  width: 100%;
+  margin-top: 10px;
+  padding: 9px 0;
+  background: var(--amber-400);
+  border: none;
+  border-radius: 5px;
+  color: #000;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+  transition: background 0.15s, opacity 0.15s;
+}
+
+.download-log-btn:hover {
+  background: #f59e0b;
+  opacity: 0.92;
 }
 
 /* ── Status summary bar ──────────────────────────────────── */

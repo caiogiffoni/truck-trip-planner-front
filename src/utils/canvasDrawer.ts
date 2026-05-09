@@ -48,8 +48,11 @@ function drawData(
   }
 
   // Total Miles Driving Today — box x=52-136, y=68-94
+  // Total Mileage Today — box x=140-250, same row
   ctx.font = '11px Arial'
-  ctx.fillText(String(Math.round(day.total_miles ?? 0)), 94, 84)
+  const milesStr = String(Math.round(day.total_miles ?? 0))
+  ctx.fillText(milesStr, 94, 84)   // left box
+  ctx.fillText(milesStr, 184, 84)  // right box
   ctx.font = '7px Arial'
 
   // Carrier name — underline at x=260-465, y=99
@@ -73,10 +76,10 @@ function drawData(
   ctx.fillStyle = '#000000'
   ctx.textAlign = 'left'
   if (meta?.fromLocation) {
-    ctx.fillText(meta.fromLocation, 45, 49)
+    ctx.fillText(meta.fromLocation, 90, 44)
   }
   if (meta?.toLocation) {
-    ctx.fillText(meta.toLocation, 262, 49)
+    ctx.fillText(meta.toLocation, 280, 44)
   }
   ctx.font      = '7px Arial'
   ctx.textAlign = 'center'

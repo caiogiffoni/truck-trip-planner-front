@@ -15,11 +15,12 @@ export default function LogSheet({ day, meta }: LogSheetProps) {
     .filter(e => e.status === 'driving')
     .reduce((sum, e) => sum + (e.end - e.start), 0)
 
+  // Always draw on mount so download works even when card is collapsed
   useEffect(() => {
-    if (isOpen && canvasRef.current) {
+    if (canvasRef.current) {
       drawLogSheet(canvasRef.current, day, meta)
     }
-  }, [isOpen, day, meta])
+  }, [day, meta])
 
   const handleDownload = (e: React.MouseEvent) => {
     e.stopPropagation()
@@ -57,20 +58,19 @@ export default function LogSheet({ day, meta }: LogSheetProps) {
         )}
 
         <div className="log-sheet-day-badge">Day {day.day}</div>
+
+        <button onClick={handleDownload} className="download-btn" type="button">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+            <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3" />
+          </svg>
+          PNG
+        </button>
       </div>
 
-      {/* ── Expanded body ── */}
-      {isOpen && (
-        <div style={{ padding: '12px' }}>
-          <canvas ref={canvasRef} style={{ width: '100%', display: 'block' }} />
-          <button onClick={handleDownload} className="download-log-btn">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-              <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3" />
-            </svg>
-            Download Day {day.day} Log
-          </button>
-        </div>
-      )}
+      {/* ── Expanded body — canvas always mounted so download works ── */}
+      <div style={{ display: isOpen ? 'block' : 'none', padding: '12px' }}>
+        <canvas ref={canvasRef} style={{ width: '100%', display: 'block' }} />
+      </div>
     </div>
   )
 }
